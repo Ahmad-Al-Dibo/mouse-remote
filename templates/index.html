@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mouse Remote Touchpad</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="app-container">
+    <h1>🖱 Mouse Remote</h1>
+
+    <!-- Coordinates -->
+    <div class="card">
+        <h2>Coordinates</h2>
+        <div class="coords">
+            <span>X: <strong id="x">0</strong></span>
+            <span>Y: <strong id="y">0</strong></span>
+        </div>
+    </div>
+
+    <!-- Step Size -->
+    <div class="card">
+        <h2>Step size (pixels)</h2>
+        <input id="stepSize" type="number" value="10" min="1">
+    </div>
+
+    <!-- D-Pad -->
+    <div class="card">
+        <h2>Directional Control</h2>
+        <div class="dpad">
+            <div></div>
+            <button onclick="moveDir(0, -1)">⬆️</button>
+            <div></div>
+
+            <button onclick="moveDir(-1, 0)">⬅️</button>
+            <button onclick="clickHere()">⏺</button>
+            <button onclick="moveDir(1, 0)">➡️</button>
+
+            <div></div>
+            <button onclick="moveDir(0, 1)">⬇️</button>
+            <div></div>
+        </div>
+    </div>
+
+    <!-- Touchpad -->
+    <div class="card">
+        <h2>Touchpad Mode</h2>
+        <div id="touchpad" class="touchpad">
+            Swipe / Drag here
+        </div>
+    </div>
+
+    <!-- Reset -->
+    <div class="card">
+        <button class="reset" onclick="resetMouse()">Reset to (0,0)</button>
+    </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

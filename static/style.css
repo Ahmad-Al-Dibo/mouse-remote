@@ -1,0 +1,102 @@
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #1e1e2f, #2b2b45);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.coords {
+    display: flex;
+    justify-content: space-around;
+    font-size: 16px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    padding: 12px;
+    background: #4f7cff;
+    color: white;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #6a92ff;
+}
+
+.reset {
+    background: #ff9f43;
+}
+
+.dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    justify-items: center;
+}
+
+.dpad button {
+    width: 70px;
+    height: 70px;
+    font-size: 26px;
+    border-radius: 50%;
+}
+
+/* Touchpad */
+.touchpad {
+    height: 180px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #2b2b45, #1e1e2f);
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255,255,255,0.5);
+    user-select: none;
+    touch-action: none;
+}
+
+.touchpad:active {
+    background: linear-gradient(145deg, #35356a, #292956);
+}
