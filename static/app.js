@@ -1,4 +1,9 @@
 /* ----------------------------
+    Variables
+----------------------------- */
+let automationEnabled = false;
+const automationPattern = []
+/* ----------------------------
    Coordinates
 ----------------------------- */
 async function fetchCoordinates() {
@@ -46,6 +51,10 @@ async function clickHere() {
     const res = await fetch("/coordinates");
     const pos = await res.json();
 
+    if (automationEnabled){
+        automationPattern.push([pos.x, pos.y]);
+    }
+
     await fetch("/click", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,6 +65,24 @@ async function clickHere() {
     });
 }
 
+
+async function clickPattern(){
+    if (automationPattern.length === 0) return;
+
+    await fetch("/click_pattern", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            positions: automationPattern,
+            repeat: document.getElementById("repeat").value,
+            delay: document.getElementById("delay").value,
+            sleep_time: document.getElementById("sleep_time").value,
+            automationEnabled: automationEnabled
+
+        })
+    })};
+
+
 /* ----------------------------
    Reset
 ----------------------------- */
@@ -63,6 +90,7 @@ async function resetMouse() {
     await fetch("/reset", { method: "POST" });
     fetchCoordinates();
 }
+
 
 /* ----------------------------
    Touchpad Smooth Control
@@ -131,3 +159,27 @@ touchpad.addEventListener("touchmove", async e => {
 touchpad.addEventListener('click', async e =>{
    clickHere();  
 })
+
+
+const changeStatus = () => {
+      document.getElementById('automationStatus').textContent = automationEnabled ? "ON" : "OFF";
+}
+
+function switchAutomatation(){
+    automationEnabled = !automationEnabled;
+    changeStatus();
+}
+
+function clearAutomatation(){
+    automationPattern.length = 0;
+    changeStatus();
+}
+
+function getPattern(){
+    return automationPattern.map(pos => `(${pos[0]}, ${pos[1]})`).join(", ");
+}
+
+function showPattern(){
+    const patternStr = getPattern();
+    document.getElementById("pattern").textContent = patternStr || "No positions added.";
+}

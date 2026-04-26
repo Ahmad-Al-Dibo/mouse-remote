@@ -20,14 +20,38 @@
         </div>
     </div>
 
-    <!-- Step Size -->
-    <div class="card">
-        <h2>Step size (pixels)</h2>
-        <input id="stepSize" type="number" value="10" min="1">
+    <div class="active-automatation">
+        <h2>Active Automatation</h2>
+        <span class="automationStatus" id="automationStatus">OFF</span>
+        <span class="positions" id="pattern"></span>
+        <div id="activeAutomatation" class="automatation-list">
+            <!-- Active automatations will be listed here-->
+             <div class="settings">
+                    <label for="repeat">Repeat:</label>
+                    <input id="repeat" type="number" value="1" min="1">
+                    <label for="sleep_time">Sleep Time (s):</label>
+                    <input id="sleep_time" type="number" value="0.5" min="0" step="0.1">
+                    <label for="delay">Delay (s):</label>
+                    <input id="delay" type="number" value="60" min="0">
+             </div>
+             <!-- switching and reset button-->
+            <button onclick="switchAutomatation()">Switch Automatation</button>
+            <button onclick="clickPattern()">Click Pattern</button>
+            <button onclick="showPattern()">Show Pattern</button>
+            <button onclick="clearAutomatation()">Clear Automatation</button>
+        </div>
     </div>
+
+    <!-- Step Size -->
+    
 
     <!-- D-Pad -->
     <div class="card">
+        <div class="step-size">
+            <h2>Step size (pixels)</h2>
+            <input id="stepSize" type="number" value="10" min="1">
+        </div>
+        <h1></h1>
         <h2>Directional Control</h2>
         <div class="dpad">
             <div></div>
