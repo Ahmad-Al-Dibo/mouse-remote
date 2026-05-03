@@ -1,0 +1,95 @@
+.coordinate-tracker {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  padding: 20px;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.tracker-header h3 {
+  margin: 0;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.loading-indicator {
+  font-size: 1.5em;
+  animation: pulse 1s infinite;
+  color: #4ade80;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.tracker-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.coordinate-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 6px;
+  backdrop-filter: blur(10px);
+}
+
+.coord-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.coord-label {
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.coord-value {
+  font-size: 1.2em;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+}
+
+.error-message {
+  background: rgba(255, 0, 0, 0.2);
+  border: 1px solid rgba(255, 100, 100, 0.5);
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.tracker-info {
+  text-align: center;
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+
+.tracker-info small {
+  display: block;
+  margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .coordinate-display {
+    grid-template-columns: 1fr;
+  }
+}

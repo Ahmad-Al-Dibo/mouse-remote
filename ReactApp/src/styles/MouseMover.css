@@ -1,0 +1,140 @@
+.mouse-mover {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-radius: 8px;
+  padding: 20px;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.mover-header h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.mover-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.offset-input {
+  padding: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+.offset-input:focus {
+  outline: none;
+  border-color: white;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.move-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.move-btn.primary {
+  background: white;
+  color: #f59e0b;
+  text-transform: uppercase;
+}
+
+.move-btn.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.move-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.directional-controls {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.directional-label {
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.direction-pad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.direction-pad button {
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.direction-pad button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+.direction-pad button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.horizontal-row {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.direction-btn.up,
+.direction-btn.down,
+.direction-btn.left,
+.direction-btn.right {
+  width: 45px;
+  height: 45px;
+}
+
+.position-info {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 12px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.position-info strong {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+  .move-btn,
+  .offset-input {
+    padding: 15px;
+    font-size: 1.05em;
+  }
+}

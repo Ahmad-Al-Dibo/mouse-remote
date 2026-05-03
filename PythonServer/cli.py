@@ -56,12 +56,32 @@ def move_coordinates(add_x, add_y):
     return new_x, new_y
 
 
-@app.route("/")
+@app.route("/api", methods=["GET"])
 def index():
-    return render_template("index.html")
+    return jsonify({
+        "message": "Welkom bij de Click Automation API! Gebruik de beschikbare endpoints om coördinaten te beheren en klikpatronen uit te voeren.",
+        "endpoints": {
+            "/api/coordinates (GET)": "Haal de huidige muiscoördinaten op.",
+            "/api/reset (POST)": "Reset de muiscoördinaten naar (10, 10).",
+            "/api/click (POST)": "Klik op opgegeven coördinaten. Vereist JSON body met 'x' en 'y'.",
+            "/api/move (POST)": "Verplaats de muis met opgegeven hoeveelheden. Vereist JSON body met 'add_x' en 'add_y'.",
+            "/api/click_pattern (POST)": "Voer een klikpatroon uit. Vereist JSON body met 'positions', 'repeat', 'delay', 'sleep_time', en 'automationEnabled'.",
+            "/api/documentation": "Bekijk deze documentatie."
+        },
+        "example_click_pattern_body": {
+            "positions": [[100, 100], [200, 200]],
+            "repeat": 3,
+            "delay": 60,
+            "sleep_time": 0.5,
+            "automationEnabled": True
+        }
+    })
 
+@app.route("/api/documentation", methods=["GET"])
+def documentation():
+    return render_template("documentation.html")
 
-@app.route("/coordinates", methods=["GET"])
+@app.route("/api/coordinates", methods=["GET"])
 def coordinates():
     x, y = get_coordinates()
     return jsonify({
@@ -70,7 +90,7 @@ def coordinates():
     })
 
 
-@app.route("/reset", methods=["POST"])
+@app.route("/api/reset", methods=["POST"])
 def reset():
     reset_coordinates()
     return jsonify({
@@ -78,7 +98,7 @@ def reset():
     })
 
 
-@app.route("/click", methods=["POST"])
+@app.route("/api/click", methods=["POST"])
 def click():
     data = request.get_json(force=True)
 
@@ -97,7 +117,7 @@ def click():
     })
 
 
-@app.route("/move", methods=["POST"])
+@app.route("/api/move", methods=["POST"])
 def move():
     data = request.get_json(force=True)
 
@@ -112,7 +132,7 @@ def move():
         "y": y
     })
 
-@app.route("/click_pattern", methods=["POST"])
+@app.route("/api/click_pattern", methods=["POST"])
 def click_pattern():
     data = request.get_json(force=True) or {}
 
