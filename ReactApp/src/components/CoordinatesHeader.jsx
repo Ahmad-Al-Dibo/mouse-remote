@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function CoordinatesHeader(props) {
-  const {coordinates, setCoordinates} = props;
+  const {coordinates} = props;
   return (
     <div className="card">
       <h2>Coordinates</h2>

@@ -25,106 +25,107 @@ function App() {
   const [touchpadActive, setTouchpadActive] = useState(false);
   const [lastTouch, setLastTouch] = useState({ x: 0, y: 0 });
 
-  // // Update coordinates periodically
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     const coords = await getCoordinates();
-  //     if (coords) {
-  //       setCoordinates(coords);
-  //     }
-  //   }, 300);
+  // Update coordinates periodically
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const coords = await getCoordinates();
+      if (coords) {
+        setCoordinates(coords);
+        console.log('Coordinates updated:', coords);
+      }
+    }, 500);
 
-  //   return () => clearInterval(interval);
-  // }, [getCoordinates]);
+    return () => clearInterval(interval);
+  }, [getCoordinates]);
 
-  // // Handle D-Pad movement
-  // const moveDir = async (dx, dy) => {
-  //   const result = await move(dx * stepSize, dy * stepSize);
-  //   if (result) {
-  //     setCoordinates(result);
-  //   }
-  // };
+  // Handle D-Pad movement
+  const moveDir = async (dx, dy) => {
+    const result = await move(dx * stepSize, dy * stepSize);
+    if (result) {
+      setCoordinates(result);
+    }
+  };
 
-  // // Click at current position
-  // const clickHere = async () => {
-  //   await click(coordinates.x, coordinates.y);
-  // };
+  // Click at current position
+  const clickHere = async () => {
+    await click(coordinates.x, coordinates.y);
+  };
 
-  // // Reset mouse to (10, 10)
-  // const resetMouse = async () => {
-  //   await reset();
-  //   setCoordinates({ x: 10, y: 10 });
-  // };
+  // Reset mouse to (10, 10)
+  const resetMouse = async () => {
+    await reset();
+    setCoordinates({ x: 10, y: 10 });
+  };
 
-  // // Record position to pattern
-  // const recordPosition = () => {
-  //   setPattern([...pattern, [coordinates.x, coordinates.y]]);
-  // };
+  // Record position to pattern
+  const recordPosition = () => {
+    setPattern([...pattern, [coordinates.x, coordinates.y]]);
+  };
 
-  // // Execute recorded pattern
-  // const clickPattern = async () => {
-  //   if (pattern.length === 0) {
-  //     alert('No pattern recorded. Click on coordinates first!');
-  //     return;
-  //   }
+  // Execute recorded pattern
+  const clickPattern = async () => {
+    if (pattern.length === 0) {
+      alert('No pattern recorded. Click on coordinates first!');
+      return;
+    }
 
-  //   await executeClickPattern({
-  //     positions: pattern,
-  //     repeat: repeatCount,
-  //     delay: delay,
-  //     sleep_time: sleepTime
-  //   });
-  // };
+    await executeClickPattern({
+      positions: pattern,
+      repeat: repeatCount,
+      delay: delay,
+      sleep_time: sleepTime
+    });
+  };
 
-  // // Show pattern
-  // const showPattern = () => {
-  //   alert(`Pattern: ${JSON.stringify(pattern)}`);
-  // };
+  // Show pattern
+  const showPattern = () => {
+    alert(`Pattern: ${JSON.stringify(pattern)}`);
+  };
 
-  // // Clear pattern
-  // const clearAutomatation = () => {
-  //   setPattern([]);
-  //   setAutomationActive(false);
-  // };
+  // Clear pattern
+  const clearAutomatation = () => {
+    setPattern([]);
+    setAutomationActive(false);
+  };
 
-  // // Toggle automation
-  // const switchAutomatation = () => {
-  //   setAutomationActive(!automationActive);
-  // };
+  // Toggle automation
+  const switchAutomatation = () => {
+    setAutomationActive(!automationActive);
+  };
 
-  // // Touchpad handlers
-  // const handleTouchpadMouseDown = (e) => {
-  //   setTouchpadActive(true);
-  //   setLastTouch({ x: e.clientX, y: e.clientY });
-  // };
+  // Touchpad handlers
+  const handleTouchpadMouseDown = (e) => {
+    setTouchpadActive(true);
+    setLastTouch({ x: e.clientX, y: e.clientY });
+  };
 
-  // const handleTouchpadMouseMove = (e) => {
-  //   if (!touchpadActive) return;
+  const handleTouchpadMouseMove = (e) => {
+    if (!touchpadActive) return;
 
-  //   const dx = e.clientX - lastTouch.x;
-  //   const dy = e.clientY - lastTouch.y;
+    const dx = e.clientX - lastTouch.x;
+    const dy = e.clientY - lastTouch.y;
 
-  //   moveDir(dx / stepSize, dy / stepSize);
-  //   setLastTouch({ x: e.clientX, y: e.clientY });
-  // };
+    moveDir(dx / stepSize, dy / stepSize);
+    setLastTouch({ x: e.clientX, y: e.clientY });
+  };
 
-  // const handleTouchpadMouseUp = () => {
-  //   setTouchpadActive(false);
-  // };
+  const handleTouchpadMouseUp = () => {
+    setTouchpadActive(false);
+  };
 
-  // useEffect(() => {
-  //   if (touchpadRef.current) {
-  //     touchpadRef.current.addEventListener('mousedown', handleTouchpadMouseDown);
-  //     document.addEventListener('mousemove', handleTouchpadMouseMove);
-  //     document.addEventListener('mouseup', handleTouchpadMouseUp);
+  useEffect(() => {
+    if (touchpadRef.current) {
+      touchpadRef.current.addEventListener('mousedown', handleTouchpadMouseDown);
+      document.addEventListener('mousemove', handleTouchpadMouseMove);
+      document.addEventListener('mouseup', handleTouchpadMouseUp);
 
-  //     return () => {
-  //       touchpadRef.current?.removeEventListener('mousedown', handleTouchpadMouseDown);
-  //       document.removeEventListener('mousemove', handleTouchpadMouseMove);
-  //       document.removeEventListener('mouseup', handleTouchpadMouseUp);
-  //     };
-  //   }
-  // }, [touchpadActive, lastTouch]);
+      return () => {
+        touchpadRef.current?.removeEventListener('mousedown', handleTouchpadMouseDown);
+        document.removeEventListener('mousemove', handleTouchpadMouseMove);
+        document.removeEventListener('mouseup', handleTouchpadMouseUp);
+      };
+    }
+  }, [touchpadActive, lastTouch]);
 
   const automationStatus = () => {
     //     background: linear-gradient(135deg, #ff4f4f, #b30000);

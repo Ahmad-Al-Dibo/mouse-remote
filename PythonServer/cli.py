@@ -3,7 +3,10 @@ import pyautogui as pag
 from flask import Flask, request, jsonify, render_template
 from typing import Iterable
 
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 
 pag.FAILSAFE = True
 
@@ -75,6 +78,20 @@ def index():
             "sleep_time": 0.5,
             "automationEnabled": True
         }
+    })
+
+@app.route("/api/connect", methods=["GET"])
+def connect():
+    device_info = {
+        "device": "Click Automation API",
+        "start-time": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "ip": request.remote_addr,
+        "type": "computer"  # phone or computer
+    }
+    return jsonify({
+        "status": "success",
+        "message": "Verbonden met Click Automation API!",
+        "device_info": device_info
     })
 
 @app.route("/api/documentation", methods=["GET"])

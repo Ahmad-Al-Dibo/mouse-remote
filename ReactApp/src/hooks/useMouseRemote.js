@@ -1,6 +1,9 @@
 import { useState, useCallback } from 'react';
 
+
+
 const API_BASE_URL = 'http://localhost:5000/api';
+
 
 /**
  * Custom hook for interacting with Mouse Remote Control API
