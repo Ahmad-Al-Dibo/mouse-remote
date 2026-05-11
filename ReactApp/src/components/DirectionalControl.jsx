@@ -1,6 +1,6 @@
-import React from 'react'
 
-export default function DirectionalControl(props) {
+
+export default function DirectionalControl() {
     
   return (
     <div className="card">

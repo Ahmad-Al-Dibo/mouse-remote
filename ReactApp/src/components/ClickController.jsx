@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useMouseRemote } from '../hooks/useMouseRemote';
 import '../styles/ClickController.css';
 
@@ -16,7 +16,7 @@ const ClickController = () => {
       await click(x, y);
       setFeedback('✓ Clicked successfully!');
       setTimeout(() => setFeedback(''), 3000);
-    } catch (err) {
+    } catch {
       setFeedback('✗ Click failed');
       setTimeout(() => setFeedback(''), 3000);
     }
@@ -29,7 +29,7 @@ const ClickController = () => {
       await click(qx, qy);
       setFeedback(`✓ Quick clicked at (${qx}, ${qy})`);
       setTimeout(() => setFeedback(''), 3000);
-    } catch (err) {
+    } catch {
       setFeedback('✗ Click failed');
     }
   };

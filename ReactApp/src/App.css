@@ -231,3 +231,71 @@ button:active {
     70% { box-shadow: 0 0 0 16px rgba(0,255,156,0); }
     100% { box-shadow: 0 0 0 0 rgba(0,255,156,0); }
 }
+.connection-card,
+.controls-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.connection-card label {
+    color: #bcdcff;
+    font-size: 13px;
+}
+
+.connection-card input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(79,163,255,0.35);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+}
+
+.hint {
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.status {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 79, 79, 0.2);
+    color: #ffb1b1;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.status.connected {
+    background: rgba(0, 255, 156, 0.18);
+    color: #8dffd4;
+}
+
+.click-button {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.touchpad.disabled {
+    opacity: 0.55;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+    transform: none;
+}
+
+.error-message {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(255, 79, 79, 0.18);
+    border: 1px solid rgba(255, 79, 79, 0.45);
+    color: #ffd0d0;
+}
