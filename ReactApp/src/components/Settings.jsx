@@ -1,13 +1,9 @@
-import React from 'react'
+
 
 export default function Settings(props) {
 const { 
     automationActive,
     automationStatus,
-    repeatCount,
-    sleepTime,
-    delay,
-
     setSleepTime,
     setRepeatCount, // implemented 
     setDelay, 

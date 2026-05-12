@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useMouseRemote } from '../hooks/useMouseRemote';
 import '../styles/MouseMover.css';
 

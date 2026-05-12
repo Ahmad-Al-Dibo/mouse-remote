@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useMouseRemote } from '../hooks/useMouseRemote';
 import '../styles/CoordinateTracker.css';
 

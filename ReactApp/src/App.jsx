@@ -1,165 +1,132 @@
-import React, { useState, useEffect, useRef, use } from 'react';
+import { useRef, useState } from 'react';
 import { useMouseRemote } from './hooks/useMouseRemote';
 import './App.css';
-import CoordinatesHeader from './components/CoordinatesHeader';
-import Settings from './components/Settings';
-import DirectionalControl from './components/DirectionalControl';
-import Touchpad from './components/Touchpad';
-import ResetBottom from './components/ResetBottom';
 
-/**
- * Main Application Component - Mouse Remote Control
- * Integrates all mouse remote control features with modern UI
- */
+const DRAG_SCALE = 1.25;
+
 function App() {
-  const { getCoordinates, click, move, reset, executeClickPattern, loading, error, clearError } = useMouseRemote();
-  
-  const [coordinates, setCoordinates] = useState({ x: 0, y: 0 }); // implemented in coordinatesHeader.jsx
-  const [automationActive, setAutomationActive] = useState(false); // implemented in settings.jsx
-  const [pattern, setPattern] = useState([]);
-  const [stepSize, setStepSize] = useState(10);
-  const [repeatCount, setRepeatCount] = useState(1); // implemented in Settings.jsx
-  const [sleepTime, setSleepTime] = useState(0.5); // implemented in Settings.jsx
-  const [delay, setDelay] = useState(60); // implemented in Settings.jsx
-  const touchpadRef = useRef(null);
-  const [touchpadActive, setTouchpadActive] = useState(false);
-  const [lastTouch, setLastTouch] = useState({ x: 0, y: 0 });
+  const { connectTv, moveTv, clickTv, reset, loading, error, clearError } = useMouseRemote();
+  const [host, setHost] = useState('local-display');
+  const [target, setTarget] = useState(null);
+  const [status, setStatus] = useState('Niet verbonden');
+  const [lastMove, setLastMove] = useState(null);
+  const dragStart = useRef(null);
+  const dragMoved = useRef(false);
 
-  // Update coordinates periodically
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const coords = await getCoordinates();
-      if (coords) {
-        setCoordinates(coords);
-        console.log('Coordinates updated:', coords);
-      }
-    }, 500);
+  const isConnected = Boolean(target?.target_id);
 
-    return () => clearInterval(interval);
-  }, [getCoordinates]);
-
-  // Handle D-Pad movement
-  const moveDir = async (dx, dy) => {
-    const result = await move(dx * stepSize, dy * stepSize);
-    if (result) {
-      setCoordinates(result);
-    }
+  const handleConnect = async () => {
+    const result = await connectTv(host);
+    setTarget(result);
+    setStatus(result.message);
   };
 
-  // Click at current position
-  const clickHere = async () => {
-    await click(coordinates.x, coordinates.y);
+  const sendMove = async (dx, dy) => {
+    if (!isConnected || (dx === 0 && dy === 0)) return;
+    const result = await moveTv(target.target_id, dx, dy);
+    setLastMove({ x: result.x, y: result.y });
   };
 
-  // Reset mouse to (10, 10)
-  const resetMouse = async () => {
-    await reset();
-    setCoordinates({ x: 10, y: 10 });
+  const handlePointerDown = (event) => {
+    if (!isConnected) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragStart.current = { x: event.clientX, y: event.clientY };
+    dragMoved.current = false;
   };
 
-  // Record position to pattern
-  const recordPosition = () => {
-    setPattern([...pattern, [coordinates.x, coordinates.y]]);
+  const handlePointerMove = async (event) => {
+    if (!dragStart.current || !isConnected) return;
+
+    const dx = Math.round((event.clientX - dragStart.current.x) * DRAG_SCALE);
+    const dy = Math.round((event.clientY - dragStart.current.y) * DRAG_SCALE);
+    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;
+
+    dragStart.current = { x: event.clientX, y: event.clientY };
+    dragMoved.current = true;
+    await sendMove(dx, dy);
   };
 
-  // Execute recorded pattern
-  const clickPattern = async () => {
-    if (pattern.length === 0) {
-      alert('No pattern recorded. Click on coordinates first!');
+  const stopDrag = () => {
+    dragStart.current = null;
+  };
+
+  const handleTapClick = async () => {
+    if (!isConnected || dragMoved.current) {
+      dragMoved.current = false;
       return;
     }
-
-    await executeClickPattern({
-      positions: pattern,
-      repeat: repeatCount,
-      delay: delay,
-      sleep_time: sleepTime
-    });
+    await clickTv(target.target_id);
   };
 
-  // Show pattern
-  const showPattern = () => {
-    alert(`Pattern: ${JSON.stringify(pattern)}`);
+  const handleReset = async () => {
+    await reset();
+    setLastMove({ x: 10, y: 10 });
   };
-
-  // Clear pattern
-  const clearAutomatation = () => {
-    setPattern([]);
-    setAutomationActive(false);
-  };
-
-  // Toggle automation
-  const switchAutomatation = () => {
-    setAutomationActive(!automationActive);
-  };
-
-  // Touchpad handlers
-  const handleTouchpadMouseDown = (e) => {
-    setTouchpadActive(true);
-    setLastTouch({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleTouchpadMouseMove = (e) => {
-    if (!touchpadActive) return;
-
-    const dx = e.clientX - lastTouch.x;
-    const dy = e.clientY - lastTouch.y;
-
-    moveDir(dx / stepSize, dy / stepSize);
-    setLastTouch({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleTouchpadMouseUp = () => {
-    setTouchpadActive(false);
-  };
-
-  useEffect(() => {
-    if (touchpadRef.current) {
-      touchpadRef.current.addEventListener('mousedown', handleTouchpadMouseDown);
-      document.addEventListener('mousemove', handleTouchpadMouseMove);
-      document.addEventListener('mouseup', handleTouchpadMouseUp);
-
-      return () => {
-        touchpadRef.current?.removeEventListener('mousedown', handleTouchpadMouseDown);
-        document.removeEventListener('mousemove', handleTouchpadMouseMove);
-        document.removeEventListener('mouseup', handleTouchpadMouseUp);
-      };
-    }
-  }, [touchpadActive, lastTouch]);
-
-  const automationStatus = () => {
-    //     background: linear-gradient(135deg, #ff4f4f, #b30000);
-    // box-shadow: 0 0 14px rgba(255, 79, 79, 0.7);
-        document.getElementById("automationStatus").style.background = automationActive ? "linear-gradient(135deg, #4caf50, #2e7d32)" : "linear-gradient(135deg, #ff4f4f, #b30000)";
-        document.getElementById("automationStatus").style.boxShadow = automationActive ? "0 0 14px rgba(76, 175, 80, 0.7)" : "0 0 14px rgba(255, 79, 79, 0.7)";
-    }
-
-    useEffect(() => {
-        automationStatus();
-    }, [automationActive]);
 
   return (
-  <div className="app-container">
-    <h1>🖱 Mouse Remote</h1>
-    {/* const [repeatCount, setRepeatCount] = useState(1); // implemented in Settings.jsx
-  const [sleepTime, setSleepTime] = useState(0.5); // implemented in Settings.jsx
-  const [delay, setDelay] = useState(60); // implemented in Settings.jsx */}
-    <CoordinatesHeader coordinates={coordinates} setCoordinates={setCoordinates} />
-    <Settings automationActive={automationActive}
-     setAutomationActive={setAutomationActive}
-      automationStatus={automationStatus}
-      repeatCount = {repeatCount}
-      setRepeatCount = {setRepeatCount}
-      sleepTime={sleepTime}
-      setSleepTime={setSleepTime}
-      delay={delay}
-      setDelay ={setDelay}
-      />
-    <DirectionalControl />
-    <Touchpad />
-    <ResetBottom />
-  </div>
+    <main className="app-container">
+      <h1>🖱 TV Mouse Remote</h1>
 
+      <section className="card connection-card">
+        <h2>TV verbinding</h2>
+        <p className="hint">MVP: bestuur de TV-weergave via de computer die op de TV is aangesloten.</p>
+        <label htmlFor="tv-host">Target naam</label>
+        <input
+          id="tv-host"
+          value={host}
+          onChange={(event) => setHost(event.target.value)}
+          disabled={loading}
+        />
+        <button onClick={handleConnect} disabled={loading}>
+          {loading ? 'Verbinden...' : 'Connect TV'}
+        </button>
+        <span className={isConnected ? 'status connected' : 'status'}>{status}</span>
+      </section>
+
+      <section className="card">
+        <h2>Touchpad</h2>
+        <button className="click-button" onClick={() => isConnected && clickTv(target.target_id)} disabled={!isConnected || loading}>
+          Klik / Selecteer
+        </button>
+        <div
+          className={isConnected ? 'touchpad' : 'touchpad disabled'}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={stopDrag}
+          onPointerCancel={stopDrag}
+          onClick={handleTapClick}
+          role="button"
+          tabIndex={0}
+          aria-label="TV touchpad"
+        >
+          {isConnected ? 'Sleep hier om de cursor te bewegen' : 'Verbind eerst met TV'}
+        </div>
+      </section>
+
+      <section className="card controls-card">
+        <h2>Snelle acties</h2>
+        <div className="dpad">
+          <span />
+          <button onClick={() => sendMove(0, -40)} disabled={!isConnected || loading}>▲</button>
+          <span />
+          <button onClick={() => sendMove(-40, 0)} disabled={!isConnected || loading}>◀</button>
+          <button onClick={() => isConnected && clickTv(target.target_id)} disabled={!isConnected || loading}>OK</button>
+          <button onClick={() => sendMove(40, 0)} disabled={!isConnected || loading}>▶</button>
+          <span />
+          <button onClick={() => sendMove(0, 40)} disabled={!isConnected || loading}>▼</button>
+          <span />
+        </div>
+        <button className="reset" onClick={handleReset} disabled={loading}>Reset naar (10,10)</button>
+        {lastMove && <p className="hint">Laatste positie: ({lastMove.x}, {lastMove.y})</p>}
+      </section>
+
+      {error && (
+        <div className="error-message" role="alert">
+          ⚠️ {error}
+          <button onClick={clearError}>Sluit</button>
+        </div>
+      )}
+    </main>
   );
 }
 
